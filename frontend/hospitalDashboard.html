@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hospital Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    .gradient-bg {
+        background: linear-gradient(135deg, #ff6b6b, #ff8e8e, #ffaaaa);
+    }
+    .btn-gradient {
+        background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+        transition: all 0.3s ease;
+    }
+    .btn-gradient:hover {
+        background: linear-gradient(135deg, #e05e5e, #e67e7e);
+        transform: translateY(-2px);
+    }
+    .focus-gradient:focus {
+        outline: none;
+        border-color: #ff8e8e;
+        box-shadow: 0 0 0 3px rgba(255, 142, 142, 0.25);
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+
+  <!-- Header -->
+  <header class="gradient-bg text-white py-6 text-center shadow-lg">
+    <h1 class="text-3xl font-bold">Hospital Dashboard</h1>
+    <p class="text-md opacity-90">Manage Blood Requests & Donors</p>
+  </header>
+
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-md min-h-screen p-5">
+      <h2 class="text-xl font-semibold text-[#ff6b6b]">Hospital Panel</h2>
+      <nav class="mt-4">
+        <ul>
+          <li class="mb-3"><a href="#" class="text-gray-700 hover:text-[#ff6b6b] transition-colors">Dashboard</a></li>
+          <li class="mb-3"><a href="hospitalreq.html" class="text-gray-700 hover:text-[#ff6b6b] transition-colors">Blood Requests</a></li>
+          <li class="mb-3"><a href="hospitaldonor.html" class="text-gray-700 hover:text-[#ff6b6b] transition-colors">Track Donors</a></li>
+          <li class="mb-3"><a href="hospitalinven.html" class="text-gray-700 hover:text-[#ff6b6b] transition-colors">Blood Inventory</a></li>
+          <li class="mb-3"><a href="hospitalCamp.html" class="text-gray-700 hover:text-[#ff6b6b] transition-colors">Campaigns</a></li>
+          <li class="mb-3">
+            <button id="logout" class="btn-gradient text-white font-medium rounded-lg text-sm px-5 py-3 text-center w-full shadow-md">
+                Logout
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+      <h2 class="text-2xl font-semibold text-[#ff6b6b] mb-4">Dashboard Overview</h2>
+
+      <!-- Stats Section -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-lg font-semibold text-gray-700">Total Blood Requests</h3>
+            <i class="fas fa-clipboard-list text-[#ff8e8e] text-2xl"></i>
+          </div>
+          <p id="totalRequests" class="text-3xl font-bold text-[#ff6b6b]">0</p>
+        </div>
+        <div class="bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-lg font-semibold text-gray-700">Available Donors</h3>
+            <i class="fas fa-user-friends text-[#ff8e8e] text-2xl"></i>
+          </div>
+          <p id="totalDonors" class="text-3xl font-bold text-[#ff6b6b]">0</p>
+        </div>
+      </div>
+
+      <!-- Active Campaigns Table -->
+      <div class="bg-white p-5 rounded-lg shadow-md">
+        <h3 class="text-lg font-semibold text-[#ff6b6b] mb-3">Active Campaigns</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr class="bg-gray-100">
+                <th class="p-3 text-left border-b">Name</th>
+                <th class="p-3 text-left border-b">Location</th>
+                <th class="p-3 text-left border-b">Date</th>
+                <th class="p-3 text-left border-b">Organizer</th>
+              </tr>
+            </thead>
+            <tbody id="campaignTable">
+              <!-- Campaigns will be inserted dynamically -->
+              <tr class="animate-pulse">
+                <td class="p-3 border-b"><div class="h-4 bg-gray-200 rounded"></div></td>
+                <td class="p-3 border-b"><div class="h-4 bg-gray-200 rounded"></div></td>
+                <td class="p-3 border-b"><div class="h-4 bg-gray-200 rounded"></div></td>
+                <td class="p-3 border-b"><div class="h-4 bg-gray-200 rounded"></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const API_URL = "http://localhost:5000/api/campaigns";
+    const API_STATS = "http://localhost:5000/api/stats";
+    let campaigns = [];
+     
+    async function fetchStats() {
+      try {
+        let response = await axios.get(API_STATS);
+        document.getElementById("totalRequests").textContent = response.data.approvedRequests;
+        document.getElementById("totalDonors").textContent = response.data.approvedDonors;
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+      }
+    }
+
+    async function fetchCampaigns() {
+      try {
+        let response = await fetch(API_URL);
+        let data = await response.json();
+        campaigns = data; // Update campaigns array
+        displayCampaigns();
+      } catch (error) {
+        console.error("Error fetching campaigns:", error);
+      }
+    }
+    
+    // Display campaigns in UI
+    function displayCampaigns() {
+      let list = document.getElementById("campaignTable");
+      list.innerHTML = "";
+      
+      if (campaigns.length === 0) {
+        list.innerHTML = "<tr><td colspan='4' class='p-3 text-center text-gray-500'>No active campaigns found</td></tr>";
+        return;
+      }
+      
+      campaigns.forEach((c) => {
+        list.innerHTML += `
+          <tr class="hover:bg-gray-50 transition-colors">
+            <td class="p-3 border-b">${c.name}</td>
+            <td class="p-3 border-b">${c.location}</td>
+            <td class="p-3 border-b">${new Date(c.date).toLocaleDateString('en-GB')}</td>
+            <td class="p-3 border-b">${c.organizer}</td>
+          </tr>
+        `;
+      });
+    }
+
+    fetchStats();
+    fetchCampaigns();
+
+    const logoutButton = document.getElementById("logout");
+    if (logoutButton) {
+      logoutButton.addEventListener("click", async () => {
+        console.log("Logout button clicked");
+        const authToken = localStorage.getItem("authToken"); // Retrieve token from localStorage
+
+        if (!authToken) {
+          console.error("No auth token found in localStorage");
+          return;
+        }
+
+        try {
+          const response = await fetch("http://localhost:5000/api/auth/logout", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${authToken}` // Include token in Authorization header
+            }
+          });
+
+          if (response.ok) {
+            console.log("Logged out successfully");
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("userId");
+            window.location.href = "adminlogin.html"; // Redirect to login page
+          } else {
+            const errorData = await response.json();
+            console.error("Logout failed:", errorData.message);
+          }
+        } catch (error) {
+          console.error("Error during logout:", error);
+        }
+      });
+    } else {
+      console.error("Logout button not found in the DOM.");
+    }
+  </script>
+</body>
+</html>

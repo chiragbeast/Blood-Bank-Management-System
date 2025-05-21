@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    .gradient-bg {
+        background: linear-gradient(135deg, #ff6b6b, #ff8e8e, #ffaaaa);
+    }
+    .btn-gradient {
+        background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+        transition: all 0.3s ease;
+    }
+    .btn-gradient:hover {
+        background: linear-gradient(135deg, #e05e5e, #e67e7e);
+        transform: translateY(-2px);
+    }
+    .focus-gradient:focus {
+        outline: none;
+        border-color: #ff8e8e;
+        box-shadow: 0 0 0 3px rgba(255, 142, 142, 0.25);
+    }
+    .logout-btn {
+              transition: all 0.3s ease;
+              overflow: hidden;
+              position: relative;
+          }
+          .logout-btn:hover {
+              transform: translateY(-3px);
+              box-shadow: 0 6px 12px rgba(255, 107, 107, 0.3);
+          }
+          .logout-btn::after {
+              content: "";
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              width: 150%;
+              height: 150%;
+              background: rgba(255, 255, 255, 0.2);
+              border-radius: 50%;
+              transform: translate(-50%, -50%) scale(0);
+              transition: transform 0.5s;
+          }
+          .logout-btn:hover::after {
+              transform: translate(-50%, -50%) scale(1);
+          }
+          /* Icon animation */
+          .stat-icon {
+              transition: all 0.3s ease;
+          }
+          .stat-card:hover .stat-icon {
+              transform: scale(1.2);
+          }
+  </style>
+</head>
+<body class="bg-gray-100">
+
+  <!-- Header -->
+  <header class="gradient-bg text-white py-6 text-center shadow-lg">
+    <h1 class="text-3xl font-bold">Admin Dashboard</h1>
+    <p class="text-md opacity-90">Manage Blood Donation Campaigns & Users</p>
+  </header>
+ 
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-md min-h-screen p-5">
+      <h2 class="text-xl font-semibold text-[#ff6b6b]">Admin Panel</h2>
+      <nav class="mt-4">
+        <ul>
+          <li class="mb-3"><a href="adminDash.html" class="text-gray-700 hover:text-[#ff6b6b] transition-colors">Dashboard</a></li>
+          <li class="mb-3"><a href="Admincampaigns.html" class="text-gray-700 hover:text-[#ff6b6b] transition-colors">Manage Campaigns</a></li>
+          <li class="mb-3"><a href="AdminDonor.html" class="text-gray-700 hover:text-[#ff6b6b] transition-colors"> Manage Donors</a></li>
+          <li class="mb-3"><a href="AdminRecipient.html" class="text-gray-700 hover:text-[#ff6b6b] transition-colors">Manage Blood Requests</a></li>
+          <li class="mb-3"><a href="inventory.html" class="text-gray-700 hover:text-[#ff6b6b] transition-colors"> Manage Blood Inventory</a></li>
+          <li class="mb-3"><a href="historyDonor.html" class="text-gray-700 hover:text-[#ff6b6b] transition-colors">History Donors</a></li>
+          <li class="mb-3"><a href="historyRequests.html" class="text-gray-700 hover:text-[#ff6b6b] transition-colors">History Requests</a></li>
+          <li class="mb-3">
+            <button id="logout" class="logout-btn btn-gradient text-white font-medium rounded-full text-sm px-5 py-3 text-center w-full shadow-md flex items-center justify-center">
+              <span>Logout</span>
+              <i class="fas fa-sign-out-alt ml-2"></i>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+      <h2 class="text-2xl font-semibold text-[#ff6b6b] mb-4">Dashboard Overview</h2>
+
+      <!-- Stats Section -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="stat-card bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-lg font-semibold text-gray-700">Total Campaigns</h3>
+            <i class="fas fa-calendar-alt text-[#ff8e8e] text-2xl stat-icon"></i>
+          </div>
+          <p id="totalCampaigns" class="text-3xl font-bold text-[#ff6b6b]">0</p>
+        </div>
+        <div class="stat-card bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-lg font-semibold text-gray-700">Total Users</h3>
+            <i class="fas fa-users text-[#ff8e8e] text-2xl stat-icon"></i>
+          </div>
+          <p id="totalUsers" class="text-3xl font-bold text-[#ff6b6b]">0</p>
+        </div>
+        <div class="stat-card bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-lg font-semibold text-gray-700">Pending Requests</h3>
+            <i class="fas fa-clock text-[#ff8e8e] text-2xl stat-icon"></i>
+          </div>
+          <p id="pendingRequests" class="text-3xl font-bold text-[#ff6b6b]">0</p>
+        </div>
+      </div>
+
+      <!-- Campaigns Table -->
+      <div class="bg-white p-5 rounded-lg shadow-md">
+        <h3 class="text-lg font-semibold text-[#ff6b6b] mb-3">Recent Campaigns</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr class="bg-gray-100">
+                <th class="p-3 text-left border-b">Name</th>
+                <th class="p-3 text-left border-b">Location</th>
+                <th class="p-3 text-left border-b">Date</th>
+                <th class="p-3 text-left border-b">Organizer</th>
+              </tr>
+            </thead>
+            <tbody id="campaignTable">
+              <!-- Campaigns will be inserted dynamically -->
+              <tr class="animate-pulse">
+                <td class="p-3 border-b"><div class="h-4 bg-gray-200 rounded"></div></td>
+                <td class="p-3 border-b"><div class="h-4 bg-gray-200 rounded"></div></td>
+                <td class="p-3 border-b"><div class="h-4 bg-gray-200 rounded"></div></td>
+                <td class="p-3 border-b"><div class="h-4 bg-gray-200 rounded"></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+  <!-- Footer -->
+  <footer class="bg-white shadow-md py-4 mt-6">
+    <div class="text-center text-gray-600">
+      &copy; 2023 Blood Donation Campaign. All rights reserved.
+    </div>
+  </footer>
+  <!-- Scripts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+
+  <script>
+      const API_URL = "http://localhost:5000/api/campaigns";
+      const API_USERS = "http://localhost:5000/api/admin/users";  // Endpoint to get total users
+      const API_PENDING = "http://localhost:5000/api/admin/pending-requests"; // Endpoint for pending donors + blood requests
+
+    let campaigns = []; // Global variable to store campaign data
+
+    // Fetch campaigns from the API
+    async function fetchCampaigns() {
+        try {
+            let response = await fetch(API_URL, {
+                headers: { "Content-Type": "application/json" }
+            });
+            campaigns = await response.json();
+            displayCampaigns();
+        } catch (error) {
+            console.error("Error fetching campaigns:", error);
+        }
+    }
+      
+    async function fetchUsers() {
+    try {
+        let response = await fetch(API_USERS);
+
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`);
+        }
+
+        let data = await response.json();
+        console.log("Total Users API Response:", data);  // Debugging log
+
+        document.getElementById("totalUsers").textContent = data.totalUsers;
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        alert("Failed to fetch total users. Check console for details.");
+    }
+}
+
+async function fetchPendingRequests() {
+    try {
+        let response = await fetch("http://localhost:5000/api/admin/pending-requests");
+
+        if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`);
+        }
+
+        let data = await response.json();
+        console.log("Pending Requests API Response:", data); // Debugging
+
+        // Ensure the correct key is used
+        if (data.pendingRequests !== undefined) {
+            document.getElementById("pendingRequests").textContent = data.pendingRequests;
+        } else {
+            console.error("pendingRequests is undefined in API response");
+        }
+    } catch (error) {
+        console.error("Error fetching pending requests:", error);
+    }
+}
+
+fetchPendingRequests();
+
+    // Display campaigns in UI
+    function displayCampaigns() {
+        let list = document.getElementById("campaignTable");
+        list.innerHTML = ""; // Clear existing content
+
+        campaigns.forEach((c) => {
+            list.innerHTML += `
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="p-3 border-b">${c.name}</td>
+                    <td class="p-3 border-b">${c.location}</td>
+                    <td class="p-3 border-b">${new Date(c.date).toLocaleDateString()}</td>
+                    <td class="p-3 border-b">${c.organizer}</td>
+                </tr>
+            `;
+        });
+
+        // Update stats
+        document.getElementById("totalCampaigns").innerText = campaigns.length;
+    }
+
+    const logoutButton = document.getElementById("logout");
+if (logoutButton) {
+    logoutButton.addEventListener("click", async () => {
+        console.log("Logout button clicked");
+        const authToken = localStorage.getItem("authToken"); // Retrieve token from localStorage
+
+        if (!authToken) {
+            console.error("No auth token found in localStorage");
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:5000/api/auth/logout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${authToken}` // Include token in Authorization header
+                }
+            });
+
+            if (response.ok) {
+                console.log("Logged out successfully");
+                localStorage.removeItem("authToken");
+                localStorage.removeItem("userId");
+                window.location.href = "adminlogin.html"; // Redirect to login page
+            } else {
+                const errorData = await response.json();
+                console.error("Logout failed:", errorData.message);
+            }
+        } catch (error) {
+            console.error("Error during logout:", error);
+        }
+    });
+} else {
+    console.error("Logout button not found in the DOM.");
+}
+
+    // Call function on page load
+    fetchCampaigns();
+    fetchUsers();
+  </script>
+
+</body>
+</html>

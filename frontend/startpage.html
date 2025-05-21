@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Bank Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#d9534f',
+                        primaryDark: '#c9302c',
+                        secondary: '#333333',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gray-100 font-sans">
+    <!-- Navigation -->
+    <nav class="bg-primary text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <i class="fas fa-heartbeat text-2xl mr-2"></i>
+                <span class="font-bold text-xl">BloodBank</span>
+            </div>
+            <div>
+                <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-primaryDark">
+            <a href="#" class="block py-2 px-4 text-white hover:bg-primary transition">Home</a>
+            <a href="#" class="block py-2 px-4 text-white hover:bg-primary transition">About</a>
+            <a href="#" class="block py-2 px-4 text-white hover:bg-primary transition">Services</a>
+            <a href="#" class="block py-2 px-4 text-white hover:bg-primary transition">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-primary text-white py-16 px-4">
+        <div class="container mx-auto text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Blood Bank Management System</h1>
+            <p class="text-xl italic mb-8">"Donate blood, save lives. Your little act of kindness can make a big
+                difference."</p>
+            <div class="flex justify-center space-x-4">
+                <a href="#learn-more"
+                    class="bg-white text-primary hover:bg-gray-100 px-6 py-3 rounded-lg font-medium transition transform hover:-translate-y-1">
+                    Learn More
+                </a>
+                <a href="#donate"
+                    class="bg-transparent border-2 border-white hover:bg-white hover:text-primary px-6 py-3 rounded-lg font-medium transition transform hover:-translate-y-1">
+                    Donate Now
+                </a>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- Main Section -->
+    <div class="container mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <div class="bg-white p-6 rounded-lg shadow-lg transition transform hover:-translate-y-2">
+                <div class="text-primary text-center mb-4">
+                    <i class="fas fa-user-plus text-5xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-primary text-center mb-4">For Users</h2>
+                <p class="text-gray-600 mb-6 text-center">Register to request blood or become a donor. Join our
+                    community and help save lives with your contribution.</p>
+                <div class="flex justify-center space-x-3">
+                    <a href="registerdonor.html"
+                        class="bg-primary hover:bg-primaryDark text-white px-4 py-2 rounded transition">Register</a>
+                    <a href="userlogin.html"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded transition">Login</a>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-lg transition transform hover:-translate-y-2">
+                <div class="text-primary text-center mb-4">
+                    <i class="fas fa-hospital-user text-5xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-primary text-center mb-4">For Hospitals</h2>
+                <p class="text-gray-600 mb-6 text-center">Manage blood requests and donor details efficiently. Access
+                    our network to meet your patients' needs.</p>
+                <div class="flex justify-center space-x-3">
+                    <a href="registerhospital.html"
+                        class="bg-primary hover:bg-primaryDark text-white px-4 py-2 rounded transition">Register</a>
+                    <a href="hospitallogin.html"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded transition">Login</a>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-lg transition transform hover:-translate-y-2">
+                <div class="text-primary text-center mb-4">
+                    <i class="fas fa-user-shield text-5xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-primary text-center mb-4">For Admin</h2>
+                <p class="text-gray-600 mb-6 text-center">Monitor and control the system effectively. Ensure smooth
+                    operations and manage all aspects of the blood bank.</p>
+                <div class="flex justify-center space-x-3">
+                    <a href="registerAdmin.html"
+                        class="bg-primary hover:bg-primaryDark text-white px-4 py-2 rounded transition">Register</a>
+                    <a href="adminlogin.html"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded transition">Login</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Why Donate Section -->
+        <div id="learn-more" class="bg-white p-8 rounded-lg shadow-lg mb-12">
+            <h2 class="text-3xl font-bold text-primary mb-6 text-center">Why Donate Blood?</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <p class="text-gray-700 mb-4">Blood donation is a vital process that helps save millions of lives
+                        each year. It is a simple yet powerful act that can make a significant difference in someone's
+                        life.</p>
+                    <ul class="list-disc pl-5 text-gray-700 space-y-2">
+                        <li>A single donation can save up to three lives</li>
+                        <li>Someone needs blood every two seconds</li>
+                        <li>Only 38% of the population is eligible to donate blood</li>
+                        <li>Blood cannot be manufactured – it can only come from donors</li>
+                        <li>Regular blood donation reduces the risk of heart attacks and cancer</li>
+                    </ul>
+                </div>
+                <div class="flex items-center justify-center">
+                    <img src="https://img.freepik.com/free-vector/blood-donation-concept-illustration_114360-2870.jpg"
+                        alt="Blood Donation" class="rounded-lg max-h-64">
+                </div>
+            </div>
+        </div>
+
+        <!-- Blood Types Section -->
+        <div class="bg-white p-8 rounded-lg shadow-lg mb-12">
+            <h2 class="text-3xl font-bold text-primary mb-6 text-center">Blood Types and Compatibility</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white">
+                    <thead>
+                        <tr>
+                            <th class="py-3 px-4 bg-primary text-white text-left">Blood Type</th>
+                            <th class="py-3 px-4 bg-primary text-white text-left">Can Donate To</th>
+                            <th class="py-3 px-4 bg-primary text-white text-left">Can Receive From</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="py-3 px-4 font-medium">A+</td>
+                            <td class="py-3 px-4">A+, AB+</td>
+                            <td class="py-3 px-4">A+, A-, O+, O-</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="py-3 px-4 font-medium">A-</td>
+                            <td class="py-3 px-4">A+, A-, AB+, AB-</td>
+                            <td class="py-3 px-4">A-, O-</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="py-3 px-4 font-medium">B+</td>
+                            <td class="py-3 px-4">B+, AB+</td>
+                            <td class="py-3 px-4">B+, B-, O+, O-</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="py-3 px-4 font-medium">B-</td>
+                            <td class="py-3 px-4">B+, B-, AB+, AB-</td>
+                            <td class="py-3 px-4">B-, O-</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="py-3 px-4 font-medium">AB+</td>
+                            <td class="py-3 px-4">AB+ only</td>
+                            <td class="py-3 px-4">All blood types</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="py-3 px-4 font-medium">AB-</td>
+                            <td class="py-3 px-4">AB+, AB-</td>
+                            <td class="py-3 px-4">A-, B-, AB-, O-</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="py-3 px-4 font-medium">O+</td>
+                            <td class="py-3 px-4">A+, B+, AB+, O+</td>
+                            <td class="py-3 px-4">O+, O-</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-3 px-4 font-medium">O-</td>
+                            <td class="py-3 px-4">All blood types</td>
+                            <td class="py-3 px-4">O- only</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Donation Process -->
+        <div id="donate" class="bg-white p-8 rounded-lg shadow-lg mb-12">
+            <h2 class="text-3xl font-bold text-primary mb-6 text-center">The Donation Process</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center p-4 border border-gray-200 rounded-lg">
+                    <div
+                        class="bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4">
+                        1</div>
+                    <h3 class="text-xl font-bold mb-2">Registration</h3>
+                    <p class="text-gray-600">Complete a registration form with your personal information and medical
+                        history.</p>
+                </div>
+                <div class="text-center p-4 border border-gray-200 rounded-lg">
+                    <div
+                        class="bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4">
+                        2</div>
+                    <h3 class="text-xl font-bold mb-2">Screening</h3>
+                    <p class="text-gray-600">A healthcare professional will check your temperature, blood pressure,
+                        pulse, and hemoglobin levels.</p>
+                </div>
+                <div class="text-center p-4 border border-gray-200 rounded-lg">
+                    <div
+                        class="bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4">
+                        3</div>
+                    <h3 class="text-xl font-bold mb-2">Donation</h3>
+                    <p class="text-gray-600">The actual donation takes about 8-10 minutes, during which you'll donate
+                        about one pint of blood.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="bg-white p-8 rounded-lg shadow-lg mb-12">
+            <h2 class="text-3xl font-bold text-primary mb-6 text-center">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="border border-gray-200 rounded-lg">
+                    <button
+                        class="faq-btn w-full text-left p-4 font-medium focus:outline-none flex justify-between items-center">
+                        <span>How often can I donate blood?</span>
+                        <i class="fas fa-chevron-down transform transition-transform"></i>
+                    </button>
+                    <div class="faq-answer hidden p-4 pt-0 text-gray-600">
+                        <p>You can donate whole blood every 56 days (8 weeks). Plasma can be donated more frequently, as
+                            often as twice a week.</p>
+                    </div>
+                </div>
+                <div class="border border-gray-200 rounded-lg">
+                    <button
+                        class="faq-btn w-full text-left p-4 font-medium focus:outline-none flex justify-between items-center">
+                        <span>Is blood donation safe?</span>
+                        <i class="fas fa-chevron-down transform transition-transform"></i>
+                    </button>
+                    <div class="faq-answer hidden p-4 pt-0 text-gray-600">
+                        <p>Yes, blood donation is very safe. All equipment used is sterile and disposed of after a
+                            single use, eliminating any risk of infection.</p>
+                    </div>
+                </div>
+                <div class="border border-gray-200 rounded-lg">
+                    <button
+                        class="faq-btn w-full text-left p-4 font-medium focus:outline-none flex justify-between items-center">
+                        <span>How long does a blood donation take?</span>
+                        <i class="fas fa-chevron-down transform transition-transform"></i>
+                    </button>
+                    <div class="faq-answer hidden p-4 pt-0 text-gray-600">
+                        <p>The entire process takes about one hour, including registration, screening, and the actual
+                            donation which only takes about 8-10 minutes.</p>
+                    </div>
+                </div>
+                <div class="border border-gray-200 rounded-lg">
+                    <button
+                        class="faq-btn w-full text-left p-4 font-medium focus:outline-none flex justify-between items-center">
+                        <span>Who can donate blood?</span>
+                        <i class="fas fa-chevron-down transform transition-transform"></i>
+                    </button>
+                    <div class="faq-answer hidden p-4 pt-0 text-gray-600">
+                        <p>Generally, anyone who is in good health, at least 17 years old (or 16 with parental consent
+                            in some states), and weighs at least 110 pounds can donate blood.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <section class="bg-gray-100 py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-primary mb-8 text-center">Contact Us</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold text-primary mb-4">Send Us a Message</h3>
+                    <form id="contactForm" class="space-y-4">
+                        <div> <label for="name" class="block text-gray-700 mb-1">Full Name</label> <input type="text"
+                                id="name"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                                placeholder="Your name"> </div>
+                        <div> <label for="email" class="block text-gray-700 mb-1">Email Address</label> <input
+                                type="email" id="email"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                                placeholder="Your email"> </div>
+                        <div> <label for="subject" class="block text-gray-700 mb-1">Subject</label> <input type="text"
+                                id="subject"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                                placeholder="Subject"> </div>
+                        <div> <label for="message" class="block text-gray-700 mb-1">Message</label> <textarea
+                                id="message" rows="4"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                                placeholder="Your message"></textarea> </div> <button type="submit"
+                            class="bg-primary hover:bg-primaryDark text-white font-medium py-2 px-6 rounded-lg transition">Send
+                            Message</button>
+                    </form>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold text-primary mb-4">Contact Information</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="text-primary mr-3 mt-1"> <i class="fas fa-map-marker-alt"></i> </div>
+                            <div>
+                                <h4 class="font-medium">Address</h4>
+                                <p class="text-gray-600">123 Blood Bank Street, Medical District, City, State 12345</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="text-primary mr-3 mt-1"> <i class="fas fa-phone"></i> </div>
+                            <div>
+                                <h4 class="font-medium">Phone</h4>
+                                <p class="text-gray-600">+1 (555) 123-4567</p>
+                                <p class="text-gray-600">Emergency: +1 (555) 987-6543</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="text-primary mr-3 mt-1"> <i class="fas fa-envelope"></i> </div>
+                            <div>
+                                <h4 class="font-medium">Email</h4>
+                                <p class="text-gray-600">info@bloodbanksystem.com</p>
+                                <p class="text-gray-600">support@bloodbanksystem.com</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="text-primary mr-3 mt-1"> <i class="fas fa-clock"></i> </div>
+                            <div>
+                                <h4 class="font-medium">Working Hours</h4>
+                                <p class="text-gray-600">Monday - Friday: 8:00 AM - 8:00 PM</p>
+                                <p class="text-gray-600">Saturday: 9:00 AM - 5:00 PM</p>
+                                <p class="text-gray-600">Sunday: Closed (Emergency services available)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <h4 class="font-medium mb-2">Follow Us</h4>
+                        <div class="flex space-x-4"> <a href="#"
+                                class="bg-primary text-white p-2 rounded-full hover:bg-primaryDark transition"> <i
+                                    class="fab fa-facebook-f"></i> </a> <a href="#"
+                                class="bg-primary text-white p-2 rounded-full hover:bg-primaryDark transition"> <i
+                                    class="fab fa-twitter"></i> </a> <a href="#"
+                                class="bg-primary text-white p-2 rounded-full hover:bg-primaryDark transition"> <i
+                                    class="fab fa-instagram"></i> </a> <a href="#"
+                                class="bg-primary text-white p-2 rounded-full hover:bg-primaryDark transition"> <i
+                                    class="fab fa-linkedin-in"></i> </a> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Function to handle FAQ accordion behavior
+        function toggleFAQ() {
+            const faqButtons = document.querySelectorAll('.faq-btn');
+
+            faqButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    // Get the next sibling (the answer)
+                    const answer = this.nextElementSibling;
+
+                    // Toggle the hidden class on the answer
+                    answer.classList.toggle('hidden');
+
+                    // Toggle the rotation of the icon
+                    const icon = this.querySelector('i');
+                    icon.classList.toggle('rotate-180');
+                });
+            });
+        }
+
+        // Call the function to initialize the FAQ accordion
+        toggleFAQ();
+
+    </script>
+</body>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Donor Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e, #ffaaaa);
+        }
+        .btn-gradient {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #e05e5e, #e67e7e);
+            transform: translateY(-2px);
+        }
+        .focus-gradient:focus {
+            outline: none;
+            border-color: #ff8e8e;
+            box-shadow: 0 0 0 3px rgba(255, 142, 142, 0.25);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="gradient-bg text-white p-4 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-6xl mx-auto">
+            <ul class="flex flex-wrap justify-center gap-6">
+                <li><a href="index.html"
+                        class="hover:text-gray-200 transition-colors duration-300 px-3 py-2 rounded">Home</a></li>
+                <li><a href="Donor.html"
+                        class="hover:text-gray-200 transition-colors duration-300 px-3 py-2 rounded">Donate Blood</a>
+                </li>
+                <li><a href="Request.html"
+                        class="hover:text-gray-200 transition-colors duration-300 px-3 py-2 rounded">Request Blood</a>
+                </li>
+                <li><a href="Campaign.html"
+                        class="hover:text-gray-200 transition-colors duration-300 px-3 py-2 rounded">Campaigns</a></li>
+                <li>
+                    <button id="logout" class="bg-white text-[#ff6b6b] hover:bg-gray-100 transition-colors duration-300 px-3 py-2 rounded-full font-medium">
+                        Logout
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8 max-w-2xl">
+        <div class="bg-white p-8 rounded-2xl shadow-lg">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-[#ff6b6b] mb-2">Save Lives Through Blood Donation</h1>
+                <p class="text-gray-600">Join our community of life-savers. Your donation can help up to 3 people!</p>
+            </div>
+
+            <form id="donorForm" class="space-y-6">
+                <!-- Personal Information Section -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-semibold border-b pb-2 text-[#ff6b6b]">Personal Information</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <input type="text" id="firstName" placeholder="First Name" required
+                                   class="w-full p-3 border rounded-lg focus-gradient">
+                        </div>
+                        <div>
+                            <input type="text" id="lastName" placeholder="Last Name" required
+                                   class="w-full p-3 border rounded-lg focus-gradient">
+                        </div>
+                        <div>
+                            <input type="email" id="email" placeholder="Email Address" required
+                                   class="w-full p-3 border rounded-lg focus-gradient">
+                        </div>
+                        <div>
+                            <input type="tel" id="contact" placeholder="Phone Number" required
+                                   class="w-full p-3 border rounded-lg focus-gradient"
+                                   pattern="[0-9]{10}">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Donation Details Section -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-semibold border-b pb-2 text-[#ff6b6b]">Donation Details</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <select id="blood_group" required
+                                    class="w-full p-3 border rounded-lg focus-gradient">
+                                <option value="">Select Blood Group</option>
+                                <option value="A+">A+</option><option value="A-">A-</option>
+                                <option value="B+">B+</option><option value="B-">B-</option>
+                                <option value="O+">O+</option><option value="O-">O-</option>
+                                <option value="AB+">AB+</option><option value="AB-">AB-</option>
+                            </select>
+                        </div>
+                        <div>
+                            <input type="date" id="last_donation" required
+                                   class="w-full p-3 border rounded-lg focus-gradient">
+                        </div>
+                        <div>
+                            <input type="number" id="age" placeholder="Age" min="18" max="65" required
+                                   class="w-full p-3 border rounded-lg focus-gradient">
+                        </div>
+                        <div>
+                            <input type="text" id="city" placeholder="City" required
+                                   class="w-full p-3 border rounded-lg focus-gradient">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Consent and Submission -->
+                <div class="space-y-4">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="terms" required class="mr-2">
+                        <label for="terms" class="text-sm text-gray-600">
+                            I agree to the <a href="#" class="text-[#ff6b6b] hover:underline">terms and conditions</a>
+                        </label>
+                    </div>
+                    <button type="submit" 
+                            class="w-full btn-gradient text-white py-3 rounded-lg shadow-md flex justify-center items-center">
+                        <span id="submitText">Register as Donor</span>
+                        <svg id="spinner" class="hidden w-5 h-5 ml-2 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+
+            <div id="successMessage" class="hidden mt-4 p-4 bg-green-100 text-green-700 rounded-lg"></div>
+            <div id="errorMessage" class="hidden mt-4 p-4 bg-red-100 text-red-700 rounded-lg"></div>
+        </div>
+    </div>
+
+    <script>
+document.getElementById('donorForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // Show loading state
+    document.getElementById('submitText').textContent = 'Processing...';
+    document.getElementById('spinner').classList.remove('hidden');
+
+    const formData = {
+        name: document.getElementById('firstName').value.trim(),
+        age: parseInt(document.getElementById('age').value),
+        bloodType: document.getElementById('blood_group').value,
+        contact: document.getElementById('contact').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        lastDonationDate: document.getElementById('last_donation').value
+    };
+
+    // Client-side validation
+    const errors = [];
+    
+    if (!formData.name) errors.push('Name is required');
+    if (isNaN(formData.age) || formData.age < 18 || formData.age > 65) {
+        errors.push('Age must be between 18-65');
+    }
+    if (!['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'].includes(formData.bloodType)) {
+        errors.push('Invalid blood type');
+    }
+    if (!formData.city) errors.push('City is required');
+
+    if (errors.length > 0) {
+        showErrors(errors);
+        resetButton();
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:5000/api/donors', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) throw new Error('Submission failed');
+
+        showSuccess('Registration successful!');
+        document.getElementById('donorForm').reset();
+        
+        // Redirect after a short delay
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1500);
+    } catch (error) {
+        showErrors([error.message]);
+        resetButton();
+    }
+});
+
+function resetButton() {
+    document.getElementById('submitText').textContent = 'Register as Donor';
+    document.getElementById('spinner').classList.add('hidden');
+}
+
+function showErrors(errors) {
+    const errorDiv = document.getElementById('errorMessage');
+    errorDiv.textContent = errors.join(', ');
+    errorDiv.classList.remove('hidden');
+    
+    // Hide success message if it's visible
+    document.getElementById('successMessage').classList.add('hidden');
+}
+
+function showSuccess(message) {
+    const successDiv = document.getElementById('successMessage');
+    successDiv.textContent = message;
+    successDiv.classList.remove('hidden');
+    
+    // Hide error message if it's visible
+    document.getElementById('errorMessage').classList.add('hidden');
+    
+    // Reset button state
+    resetButton();
+}
+    </script>
+</body>
+</html>

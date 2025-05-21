@@ -1,0 +1,194 @@
+SQL Schema Design
+1. Users Table
+
+Stores user accounts (admins, donors, hospitals).
+
+CREATE TABLE Users (
+  user_id INT PRIMARY KEY AUTO_INCREMENT,
+  full_name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  username VARCHAR(50) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL, -- Hashed password
+  role ENUM('admin', 'donor', 'hospital') NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+2. Donors Table
+
+Tracks donor details (linked to Users if applicable).
+
+CREATE TABLE Donors (
+  donor_id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT, -- Optional: link to Users table
+  name VARCHAR(100) NOT NULL,
+  age INT NOT NULL,
+  blood_type VARCHAR(3) NOT NULL,
+  contact VARCHAR(15) NOT NULL,
+  last_donation_date DATE,
+  city VARCHAR(50) NOT NULL,
+  status ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
+3. Inventory Table
+     
+     Tracks blood stock quantities (unique per blood type).
+   
+   CREATE TABLE Inventory (
+  blood_type VARCHAR(3) PRIMARY KEY, -- Unique blood type entry
+  quantity INT NOT NULL CHECK (quantity >= 0),
+  last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+4. Requests Table
+
+Records blood requests from hospitals.
+
+CREATE TABLE Requests (
+  request_id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT, -- Optional: link to hospital user
+  patient_name VARCHAR(100) NOT NULL,
+  blood_type VARCHAR(3) NOT NULL,
+  hospital VARCHAR(100) NOT NULL,
+  city VARCHAR(50) NOT NULL,
+  contact VARCHAR(15) NOT NULL,
+  status ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
+6. Campaigns Table
+
+Stores donation campaigns.
+
+CREATE TABLE Campaigns (
+  campaign_id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(100) NOT NULL,
+  location VARCHAR(100) NOT NULL,
+  date DATE NOT NULL,
+  organizer VARCHAR(100) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+ **SQL Queries for statsRoutes.js - Get Approved Counts**
+
+-- Approved Donors
+SELECT COUNT(*) AS approved_donors FROM Donors WHERE status = 'Approved';
+
+-- Approved Requests
+SELECT COUNT(*) AS approved_requests FROM Requests WHERE status = 'Approved';
+
+
+**SQL Queries for requestRoutes.js - Blood Request Operations**
+
+Create a Request:
+
+INSERT INTO Requests (patient_name, blood_type, hospital, city, contact)
+VALUES ('Alice Smith', 'B+', 'General Hospital', 'New York', '555-123-4567');
+
+Get All Requests:
+
+SELECT * FROM Requests;
+
+
+Update Request Status:
+
+UPDATE Requests
+SET status = 'Approved'
+WHERE request_id = 1;
+
+Delete a Request:
+
+DELETE FROM Requests WHERE request_id = 1;
+
+ **SQL Queries for inventoryRoutes.js - Inventory Operations**
+
+Add/Update Blood Stock:
+
+-- Insert new stock or update existing
+INSERT INTO Inventory (blood_type, quantity)
+VALUES ('A+', 10)
+ON DUPLICATE KEY UPDATE quantity = quantity + 10;
+
+
+Get All Inventory:
+
+SELECT blood_type, quantity FROM Inventory;
+
+
+Delete Blood Stock:
+
+DELETE FROM Inventory WHERE blood_type = 'A+';
+
+**SQL Queries  for historyRoutes.js - Historical Data**
+
+Blood Request History:
+
+SELECT patient_name, blood_type, status, created_at
+FROM Requests
+ORDER BY created_at DESC;
+
+Donor History:
+
+SELECT name, blood_type, last_donation_date, status
+FROM Donors
+ORDER BY created_at DESC;
+
+
+**SQL Queries for authRoutes.js**
+
+1. User Registration
+
+INSERT INTO Users (full_name, email, username, password, role)
+VALUES ('John Doe', 'john@example.com', 'johndoe', 'hashed_password', 'donor');
+
+2. User Login
+
+-- Retrieve user by username/email for password validation
+SELECT user_id, username, password, role FROM Users 
+WHERE username = 'johndoe' OR email = 'john@example.com';
+
+3. Get User Profile
+
+SELECT full_name, email, username, role FROM Users 
+WHERE user_id = 1;
+
+4. Update User Details
+
+UPDATE Users
+SET full_name = 'John Updated', email = 'updated@example.com'
+WHERE user_id = 1;
+
+
+
+**SQL Queries for donorRoutes.js**
+
+1. Create a Donor
+
+INSERT INTO Donors (user_id, name, age, blood_type, contact, city)
+VALUES (1, 'Alice Smith', 28, 'O+', '555-123-4567', 'New York');
+
+2. List All Donors
+
+-- Basic donor list
+SELECT * FROM Donors;
+
+-- With user details (if linked)
+SELECT d.*, u.email, u.role 
+FROM Donors d
+LEFT JOIN Users u ON d.user_id = u.user_id;
+
+3. Update Donor Status
+
+UPDATE Donors
+SET status = 'Approved'
+WHERE donor_id = 1;
+
+4. Delete a Donor
+
+DELETE FROM Donors WHERE donor_id = 1;
