@@ -1,0 +1,8 @@
+# Ignore node modules
+node_modules/
+
+# Ignore npm lock file
+package-lock.json
+
+# (Optional) Ignore yarn lock file
+yarn.lock
